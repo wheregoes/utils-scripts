@@ -1,5 +1,6 @@
 import os
 import hashlib
+import logging
 from pathlib import Path
 from tqdm import tqdm
 
@@ -7,6 +8,8 @@ file_path = os.getcwd()
 files_count = sum(len(files) for _, _, files in os.walk(file_path))
 
 unique_files = dict()
+
+logging.basicConfig(filename='rm-duplicate-files-PermissionError.log', level=logging.ERROR)
 
 with tqdm(total=files_count, desc='Processing files') as pbar:
     for root, folders, files in os.walk(file_path):
@@ -27,4 +30,5 @@ with tqdm(total=files_count, desc='Processing files') as pbar:
                 pbar.update(1)
             except PermissionError:
                 print(f"PermissionError: {file_path}")
+                logging.error(f"PermissionError: {file_path}")
             continue
