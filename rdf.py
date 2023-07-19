@@ -9,7 +9,7 @@ files_count = sum(len(files) for _, _, files in os.walk(file_path))
 
 unique_files = dict()
 
-logging.basicConfig(filename='rm-duplicate-files-PermissionError.log', level=logging.ERROR)
+logging.basicConfig(filename='rdf-PermissionError.log', level=logging.ERROR)
 
 with tqdm(total=files_count, desc='Processing files') as pbar:
     for root, folders, files in os.walk(file_path):
