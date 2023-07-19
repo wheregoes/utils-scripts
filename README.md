@@ -5,5 +5,6 @@ Search recursively for duplicate files by calculating hash of every file and del
 
 # dmf.py
 Download multiple files from a file or user input and save on folder.
+**Doesn't work with .onion (yet)**
 **Requirements:**
 ```pip install tqdm```
