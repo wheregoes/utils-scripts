@@ -5,6 +5,9 @@ import logging
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import argparse
+from colorama import init, Fore, Style
+
+init(autoreset=True)
 
 def download_file(url, destination_folder):
     retries = 3
@@ -19,7 +22,7 @@ def download_file(url, destination_folder):
 
                 total_size = int(response.headers.get('content-length', 0))
                 block_size = 1024  # 1 KB
-                progress_bar = tqdm(total=total_size, unit='B', unit_scale=True, desc=file_name)
+                progress_bar = tqdm(total=total_size, unit='B', unit_scale=True, desc=f"{Fore.GREEN}{file_name}{Style.RESET_ALL}")
 
                 with open(destination_path, 'wb') as file:
                     downloaded_size = 0
@@ -32,18 +35,18 @@ def download_file(url, destination_folder):
 
                 # Verify integrity after download
                 if downloaded_size != total_size:
-                    print(f"Failed to download the complete file: {file_name}")
+                    print(f"{Fore.RED}Failed to download the complete file: {file_name}{Style.RESET_ALL}")
                     return False
 
-                print(f"File downloaded: {file_name}")
+                print(f"{Fore.GREEN}File downloaded: {file_name}{Style.RESET_ALL}")
                 return True
             else:
-                print(f"Failed to download file from {url}. Status code: {response.status_code}")
+                print(f"{Fore.RED}Failed to download file from {url}. Status code: {response.status_code}{Style.RESET_ALL}")
         except Exception as e:
-            print(f"Error downloading file from {url}: {e}")
+            print(f"{Fore.RED}Error downloading file from {url}: {e}{Style.RESET_ALL}")
 
         if attempt < retries - 1:
-            print(f"Retrying in {delay_times[attempt]} seconds...")
+            print(f"{Fore.YELLOW}Retrying in {delay_times[attempt]} seconds...{Style.RESET_ALL}")
             time.sleep(delay_times[attempt])
 
     # If download failed after all retries, log the error
@@ -59,7 +62,7 @@ def download_files_with_threading(urls_to_download, destination_folder, num_thre
 
         for future in as_completed(futures):
             if not future.result():
-                print(f"Failed to download: {future.result()}")
+                print(f"{Fore.RED}Failed to download: {future.result()}{Style.RESET_ALL}")
 
 def download_files_from_file(file_path, destination_folder, num_threads):
     if not os.path.exists(destination_folder):
