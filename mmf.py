@@ -56,7 +56,7 @@ def move_or_copy_files(source_paths, destination_folder):
         action_function = shutil.move
         action_name = "Moved"
     elif choice == "2":
-        action_function = shutil.copy2  # Use shutil.copy2 instead of shutil.copy
+        action_function = shutil.copy2  
         action_name = "Copied"
     else:
         print("Invalid option. Exiting.")
