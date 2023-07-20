@@ -47,9 +47,12 @@ See -h for options
 Move/Copy multiple files using (or not) Regex <br />
 
 **Features** <br />
-:heavy_check_mark: Soon <br />
+:heavy_check_mark: Can use Regex <br />
+:heavy_check_mark: Can move/copy files from differents folders <br />
+:heavy_check_mark: Can be used in background. <br />
 
 **Future Updates** <br />
+:heavy_minus_sign: Handle permissionError when try to moving a file without necessary permissions (eg. read-only). <br />
 ***Suggestions***
 
 **Requirements:**
