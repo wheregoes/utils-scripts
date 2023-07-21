@@ -31,6 +31,7 @@ Download multiple files from a file or user input and save on folder. <br />
 
 **Future Updates** <br />
 :heavy_minus_sign: Handle URLs from Clearnet and Deep/Dark web (.onion) together. <br />
+:heavy_minus_sign: Improve the log registry (add status code etc). <br />
 ***Suggestions*** <br />
 
 Usage:
