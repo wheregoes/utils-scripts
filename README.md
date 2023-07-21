@@ -45,7 +45,7 @@ See -h for options
 
 # mmf.py
 **Description** <br />
-Move/Copy multiple files using (or not) Regex <br />
+Move/Copy multiple files <br />
 
 **Requirements:**
 ```none```
