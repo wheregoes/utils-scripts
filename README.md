@@ -47,14 +47,30 @@ See -h for options
 **Description** <br />
 Move/Copy multiple files using (or not) Regex <br />
 
+**Requirements:**
+```none```
+
 **Features** <br />
-:heavy_check_mark: Can use Regex <br />
-:heavy_check_mark: Can move/copy files from differents folders <br />
+:heavy_check_mark: Supports Regex <br />
+:heavy_check_mark: Move/copy files from differents folders <br />
 :heavy_check_mark: Can be used in background. <br />
+:heavy_check_mark: 
 
 **Future Updates** <br />
 :heavy_minus_sign: Handle permissionError when try to moving a file without necessary permissions (eg. read-only). <br />
 ***Suggestions***
 
-**Requirements:**
-```pip install tqdm```
+Usage:
+```
+python3 mmf.py [--regex] (-mv | -cp) [source_paths_file] destination_folder
+
+positional arguments:
+  source_paths_file   Path to the source_paths.txt file or enter paths one by one.
+  destination_folder  Path to the destination folder.
+
+options:
+  -h, --help          show this help message and exit
+  --regex             Use regex to match files in the source directory.
+  -mv, --move-files   Move files to the destination folder.
+  -cp, --copy-files   Copy files to the destination folder.
+```
