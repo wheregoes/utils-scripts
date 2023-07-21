@@ -54,7 +54,6 @@ Move/Copy multiple files using (or not) Regex <br />
 :heavy_check_mark: Supports Regex <br />
 :heavy_check_mark: Move/copy files from differents folders <br />
 :heavy_check_mark: Can be used in background. <br />
-:heavy_check_mark: 
 
 **Future Updates** <br />
 :heavy_minus_sign: Handle permissionError when try to moving a file without necessary permissions (eg. read-only). <br />
