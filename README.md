@@ -36,7 +36,7 @@ Download multiple files from a file or user input and save on folder. <br />
 
 Usage:
 ```
-python3 dmf.py --multi-thread -T 10
+python script_name.py [--multi-thread] [-T NUM_THREADS]
 
 See -h for options
 ```
