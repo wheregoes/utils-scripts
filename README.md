@@ -45,14 +45,14 @@ See -h for options
 
 # mmf.py
 **Description** <br />
-Move/Copy multiple files <br />
+Move/Copy multiple files. <br />
 
 **Requirements:**
 ```none```
 
 **Features** <br />
-:heavy_check_mark: Supports Regex <br />
-:heavy_check_mark: Move/copy files from differents folders <br />
+:heavy_check_mark: Supports Regex. <br />
+:heavy_check_mark: Move/copy files from differents folders. <br />
 :heavy_check_mark: Can be used in background. <br />
 
 **Future Updates** <br />
