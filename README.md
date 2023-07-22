@@ -19,8 +19,7 @@ Search recursively for duplicate files by calculating hash of every file and del
 Download multiple files from a file or user input and save on folder. <br />
 
 **Requirements:**
-```pip install tqdm```
-```pip install requests```
+```pip install requests tqdm colorama```
 
 **Features** <br />
 :heavy_check_mark: Can choose to download one file at time or many you want using multi-thread option. <br />
