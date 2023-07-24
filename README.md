@@ -73,7 +73,7 @@ options:
   -cp, --copy-files   Copy files to the destination folder.
 ```
 
-# sfbe.py
+# sfe.py
 **Description** <br />
 Separate files by extension <br />
 
@@ -89,7 +89,7 @@ Separate files by extension <br />
 
 Usage:
 ```
-python sfbe.py [-h] [-cp] [-mv] [source_directory] [destination_directory]
+python sfe.py [-h] [-cp] [-mv] [source_directory] [destination_directory]
 
 See -h for options
 ```
