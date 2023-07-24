@@ -60,7 +60,7 @@ Move/Copy multiple files. <br />
 
 Usage:
 ```
-python3 mmf.py [--regex] (-mv | -cp) [source_paths_file] destination_folder
+python3 mmf.py [--regex] (-mv | -cp) [source_paths_file] [destination_folder]
 
 positional arguments:
   source_paths_file   Path to the source_paths.txt file or enter paths one by one.
@@ -71,4 +71,25 @@ options:
   --regex             Use regex to match files in the source directory.
   -mv, --move-files   Move files to the destination folder.
   -cp, --copy-files   Copy files to the destination folder.
+```
+
+# sfbe.py
+**Description** <br />
+Separate files by extension <br />
+
+**Requirements:**
+```pip install colorama```
+
+**Features** <br />
+:heavy_check_mark: Log when can't move/copy a file. <br />
+:heavy_check_mark: Can be used in background. <br />
+
+**Future Updates** <br />
+***Suggestions*** <br />
+
+Usage:
+```
+python sfbe.py [-h] [-cp] [-mv] [source_directory] [destination_directory]
+
+See -h for options
 ```
