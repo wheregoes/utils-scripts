@@ -48,6 +48,9 @@ def search_files_for_fields(fields_to_search, directory, database_file):
     if max_id is None:
         max_id = 0
 
+    # Assign the timestamp value at the beginning of the function
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     for root, _, files in os.walk(directory):
         for file in files:
             file_path = os.path.join(root, file)
@@ -73,7 +76,6 @@ def search_files_for_fields(fields_to_search, directory, database_file):
                 max_id += 1
                 unique_id = max_id
 
-                timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 file_type = clean_string(tika_parser.from_file(file_path)['metadata']['Content-Type'])
 
                 # Insert into the database
@@ -87,6 +89,7 @@ def search_files_for_fields(fields_to_search, directory, database_file):
                     print(f"{Fore.RED}[SQL - {timestamp}] Error inserting into database: {e}{Fore.RESET}")
 
     conn.close()
+    # Use the timestamp variable in the print statement at the end of the function
     print(f"{Fore.GREEN}[{timestamp}] Database insertion completed.{Fore.RESET}")
 
 if __name__ == '__main__':
