@@ -12,21 +12,20 @@ Search for terms in files recursively and save on SQLite database <br />
 **Future Updates** <br />
 ***Suggestions***
 
-# rdf.py
-**Description** <br />
-Search recursively for duplicate files by calculating hash of every file and delete. <br />
+Usage:
+```
+usage: stf.py [-h] [terms_file] [directory] [database]
 
-**Requirements:**
-```pip install tqdm```
+Search for terms in files recursively and save on SQLite database
 
-**Features** <br />
-:heavy_check_mark: Remove files recursively (user input the directory or where the script is). <br />
-:heavy_check_mark: Can handle large files. <br />
-:heavy_check_mark: Log when can't remove a file.  <br />
-:heavy_check_mark: Can be used in background. <br />
+positional arguments:
+  terms_file   Path to the file containing terms.
+  directory    The directory to search recursively.
+  database     SQLite database file to store the results.
 
-**Future Updates** <br />
-***Suggestions***
+options:
+  -h, --help   Help
+```
 
 # dmf.py
 **Description** <br />
@@ -49,9 +48,7 @@ Download multiple files from a file or user input and save on folder. <br />
 
 Usage:
 ```
-python dmf.py [--multi-thread] [-T NUM_THREADS]
-
-See -h for options
+python3 dmf.py [--multi-thread] [-T NUM_THREADS]
 ```
 
 **To use with .onion websites you can use torsocks before the script e.g: ```torsocks python3 dmf.py```** <br />
@@ -81,7 +78,7 @@ positional arguments:
   destination_folder  Path to the destination folder.
 
 options:
-  -h, --help          show this help message and exit
+  -h, --help          Help
   --regex             Use regex to match files in the source directory.
   -mv, --move-files   Move files to the destination folder.
   -cp, --copy-files   Copy files to the destination folder.
@@ -103,7 +100,21 @@ Separate files by extension <br />
 
 Usage:
 ```
-python sfe.py [-h] [-cp] [-mv] [source_directory] [destination_directory]
-
-See -h for options
+python3 sfe.py [-h] [-cp] [-mv] [source_directory] [destination_directory]
 ```
+
+# rdf.py
+**Description** <br />
+Search recursively for duplicate files by calculating hash of every file and delete. <br />
+
+**Requirements:**
+```pip install tqdm```
+
+**Features** <br />
+:heavy_check_mark: Remove files recursively (user input the directory or where the script is). <br />
+:heavy_check_mark: Can handle large files. <br />
+:heavy_check_mark: Log when can't remove a file.  <br />
+:heavy_check_mark: Can be used in background. <br />
+
+**Future Updates** <br />
+***Suggestions***
