@@ -14,7 +14,8 @@ def read_fields_from_file(file_path):
         return [line.strip() for line in f if line.strip()]
 
 def extract_text_from_binary(file_path):
-    print(f"{Fore.CYAN}[Tika] Processing file: {file_path}{Fore.RESET}")
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    print(f"{Fore.CYAN}[Tika - {timestamp}] Processing file: {file_path}{Fore.RESET}")
     parsed = tika_parser.from_file(file_path)
     return parsed['content'] if 'content' in parsed else ''
 
@@ -80,13 +81,13 @@ def search_files_for_fields(fields_to_search, directory, database_file):
                     c.execute("INSERT INTO search_results VALUES (?, ?, ?, ?, ?, ?)",
                               (unique_id, timestamp, file_path, file_type, ', '.join(matched_fields), '\n'.join(matched_content)))
                     conn.commit()
-                    print(f"{Fore.MAGENTA}[SQL] Inserted into database: {file_path}{Fore.RESET}")
+                    print(f"{Fore.MAGENTA}[SQL - {timestamp}] Inserted into database: {file_path}{Fore.RESET}")
                 except Exception as e:
                     conn.rollback()
-                    print(f"{Fore.RED}Error inserting into database: {e}{Fore.RESET}")
+                    print(f"{Fore.RED}[SQL - {timestamp}] Error inserting into database: {e}{Fore.RESET}")
 
     conn.close()
-    print(f"{Fore.GREEN}Database insertion completed.{Fore.RESET}")
+    print(f"{Fore.GREEN}[{timestamp}] Database insertion completed.{Fore.RESET}")
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description='Search for terms in files recursively and save on SQLite database')
@@ -96,7 +97,7 @@ if __name__ == '__main__':
     args = arg_parser.parse_args()
 
     fields_to_search = read_fields_from_file(args.fields_file)
-    print(f"{Fore.YELLOW}Searching for fields: {fields_to_search}{Fore.RESET}")
+    print(f"{Fore.YELLOW}[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Searching for fields: {fields_to_search}{Fore.RESET}")
     search_files_for_fields(fields_to_search, args.directory, args.database)
 
-    print(f"{Fore.GREEN}Search completed.{Fore.RESET}")
+    print(f"{Fore.GREEN}[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Search completed.{Fore.RESET}")
