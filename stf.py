@@ -4,12 +4,17 @@ import argparse
 import sqlite3
 from tika import parser as tika_parser
 from datetime import datetime
+from colorama import init, Fore
+
+# Initialize colorama to support ANSI escape codes on Windows
+init()
 
 def read_fields_from_file(file_path):
     with open(file_path, 'r') as f:
         return [line.strip() for line in f if line.strip()]
 
 def extract_text_from_binary(file_path):
+    print(f"{Fore.CYAN}[Tika] Processing file: {file_path}{Fore.RESET}")
     parsed = tika_parser.from_file(file_path)
     return parsed['content'] if 'content' in parsed else ''
 
@@ -23,7 +28,7 @@ def initialize_database(database_file):
 
     # Create a new table if it doesn't exist
     c.execute('''CREATE TABLE IF NOT EXISTS search_results 
-                 (Timestamp TEXT, Path TEXT, Type TEXT, Match TEXT, Match_Content TEXT)''')
+                 (ID INTEGER PRIMARY KEY, Timestamp TEXT, Path TEXT, Type TEXT, Match TEXT, Match_Content TEXT)''')
 
     conn.commit()
     conn.close()
@@ -34,6 +39,13 @@ def search_files_for_fields(fields_to_search, directory, database_file):
 
     conn = sqlite3.connect(database_file)
     c = conn.cursor()
+
+    # Retrieve the maximum existing ID from the database to generate new unique IDs
+    c.execute("SELECT MAX(ID) FROM search_results")
+    max_id = c.fetchone()[0]
+
+    if max_id is None:
+        max_id = 0
 
     for root, _, files in os.walk(directory):
         for file in files:
@@ -56,21 +68,25 @@ def search_files_for_fields(fields_to_search, directory, database_file):
                         matched_content.append(line.strip())
 
             if found_matches:
+                # Generate a new unique ID for this input
+                max_id += 1
+                unique_id = max_id
+
                 timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 file_type = clean_string(tika_parser.from_file(file_path)['metadata']['Content-Type'])
 
                 # Insert into the database
                 try:
-                    c.execute("INSERT INTO search_results VALUES (?, ?, ?, ?, ?)",
-                              (timestamp, file_path, file_type, ', '.join(matched_fields), '\n'.join(matched_content)))
+                    c.execute("INSERT INTO search_results VALUES (?, ?, ?, ?, ?, ?)",
+                              (unique_id, timestamp, file_path, file_type, ', '.join(matched_fields), '\n'.join(matched_content)))
                     conn.commit()
-                    print(f"Inserted into database: {file_path}")
+                    print(f"{Fore.MAGENTA}[SQL] Inserted into database: {file_path}{Fore.RESET}")
                 except Exception as e:
                     conn.rollback()
-                    print(f"Error inserting into database: {e}")
+                    print(f"{Fore.RED}Error inserting into database: {e}{Fore.RESET}")
 
     conn.close()
-    print("Database insertion completed.")
+    print(f"{Fore.GREEN}Database insertion completed.{Fore.RESET}")
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description='Search for terms in files recursively and save on SQLite database')
@@ -80,7 +96,7 @@ if __name__ == '__main__':
     args = arg_parser.parse_args()
 
     fields_to_search = read_fields_from_file(args.fields_file)
-    print(f"Searching for fields: {fields_to_search}")
+    print(f"{Fore.YELLOW}Searching for fields: {fields_to_search}{Fore.RESET}")
     search_files_for_fields(fields_to_search, args.directory, args.database)
 
-    print("Search completed.")
+    print(f"{Fore.GREEN}Search completed.{Fore.RESET}")
