@@ -1,15 +1,16 @@
 # stf.py
 **Description** <br />
-Search for terms in files recursively and save on SQLite database <br />
+Search for terms in files recursively and save on SQLite database. <br />
 
 **Requirements:**
 ```pip install tika sql colorama```
 
 **Features** <br />
-:heavy_check_mark: Uses Apache Tika to handle binary files (the script search terms even inside of Microsoft Office document formats, PDF etc. See the full list: https://tika.apache.org/2.8.0/formats.html) <br />
+:heavy_check_mark: Uses Apache Tika to handle binary files (the script search terms even inside of Microsoft Office document formats, PDF etc. See the full list: https://tika.apache.org/2.8.0/formats.html). <br />
 :heavy_check_mark: Can be used in background. <br />
 
 **Future Updates** <br />
+:heavy_minus_sign: Add a log registry. <br />
 ***Suggestions***
 
 Usage:
