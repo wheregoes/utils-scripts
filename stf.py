@@ -5,6 +5,7 @@ import sqlite3
 from tika import parser as tika_parser
 from datetime import datetime
 from colorama import init, Fore
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 # Initialize colorama to support ANSI escape codes on Windows
 init()
@@ -33,7 +34,8 @@ def initialize_database(database_file):
 
     conn.commit()
     conn.close()
-
+    
+@retry(stop=stop_after_attempt(3), wait=wait_random_exponential(multiplier=1, max=10))
 def search_files_for_fields(fields_to_search, directory, database_file):
     if not os.path.exists(database_file):
         initialize_database(database_file)
