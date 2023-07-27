@@ -14,7 +14,7 @@ def move_file(source_path, destination_path):
     shutil.move(source_path, destination_path)
     return f"{Fore.CYAN}Moved{Style.RESET_ALL}: {source_path} to {destination_path}"
 
-def separate_files_by_extension(source_dir, destination_dir, action):
+def separate_files_by_extension(source_dir, destination_dir, action, recursive=False):
     os.makedirs(destination_dir, exist_ok=True)
 
     action_functions = {
@@ -43,7 +43,6 @@ def separate_files_by_extension(source_dir, destination_dir, action):
                 continue
 
 if __name__ == "__main__":
-    
     banner = r"""
 _____/\\\\\\\\\\\____/\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\_        
  ___/\\\/////////\\\_\/\\\///////////__\/\\\///////////__       
@@ -66,6 +65,7 @@ _____/\\\\\\\\\\\____/\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\_
     parser.add_argument("destination_directory", nargs="?", help="Path to the destination directory")
     parser.add_argument("-cp", "--copy-files", action="store_true", help="Copy files to destination directory")
     parser.add_argument("-mv", "--move-files", action="store_true", help="Move files to destination directory")
+    parser.add_argument("-r", "--recursive", action="store_true", help="Recursively copy or move files")
     args = parser.parse_args()
 
     # Check if only one argument is provided
@@ -76,4 +76,13 @@ _____/\\\\\\\\\\\____/\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\_
         print("Error: Please specify either --copy-files (-cp) or --move-files (-mv).")
         exit(1)
 
-    separate_files_by_extension(args.source_directory, args.destination_directory, 'copy' if args.copy_files else 'move')
+    # Ensure destination directory is provided if recursive option is used
+    if args.recursive and not args.destination_directory:
+        print("Error: Please provide a destination directory when using the recursive option.")
+        exit(1)
+
+    # Call the function with the recursive option
+    if args.recursive:
+        separate_files_by_extension(args.source_directory, args.destination_directory, 'copy' if args.copy_files else 'move', recursive=True)
+    else:
+        separate_files_by_extension(args.source_directory, args.destination_directory, 'copy' if args.copy_files else 'move')
