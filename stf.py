@@ -16,11 +16,10 @@ def read_fields_from_file(file_path):
     with open(file_path, 'r') as f:
         return {line.strip() for line in f if line.strip()}
 
-def extract_text_from_binary(file_path):
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+def extract_text_from_binary(file_path, timestamp):  # Pass timestamp as an argument
     output = f"[Tika - {timestamp}] Processing file: {file_path}"
     print(f"{Fore.CYAN}{output}{Fore.RESET}")
-    save_log_to_file('tika_log.txt', output)
+    save_log_to_file('tika_log.txt', output, timestamp)
 
     parsed = tika_parser.from_file(file_path)
     return parsed['content'] if 'content' in parsed else ''
@@ -58,15 +57,12 @@ def search_files_for_fields(fields_to_search, directory, database_file):
     if max_id is None:
         max_id = 0
 
-    # Assign the timestamp value at the beginning of the function
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
     for root, _, files in os.walk(directory):
         for file in files:
             file_path = os.path.join(root, file)
             if not os.path.isfile(file_path):
                 continue
-            file_content = extract_text_from_binary(file_path)
+            file_content = extract_text_from_binary(file_path, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             if not file_content:
                 continue
 
@@ -75,7 +71,7 @@ def search_files_for_fields(fields_to_search, directory, database_file):
             matched_content = []
 
             for line_number, line in enumerate(file_content.splitlines(), start=1):
-                if search_regex.search(line):  # Use regex search instead of re.search
+                if search_regex.search(line):
                     found_matches = True
                     matched_line = line.strip()
                     matched_content.append(matched_line)
@@ -91,31 +87,35 @@ def search_files_for_fields(fields_to_search, directory, database_file):
 
                 # Insert into the database
                 try:
+                    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     c.execute("INSERT INTO search_results VALUES (?, ?, ?, ?, ?, ?)",
                               (unique_id, timestamp, file_path, file_type, ', '.join(matched_fields), '\n'.join(matched_content)))
                     conn.commit()
                     output = f"[SQL - {timestamp}] Inserted into database: {file_path}"
                     print(f"{Fore.MAGENTA}{output}{Fore.RESET}")
-                    save_log_to_file('sql_log.txt', output)
+                    save_log_to_file('sql_log.txt', output, timestamp)
                 except Exception as e:
                     conn.rollback()
                     output = f"[SQL - {timestamp}] Error inserting into database: {e}"
                     print(f"{Fore.RED}{output}{Fore.RESET}")
-                    save_log_to_file('sql_log.txt', output)
+                    save_log_to_file('sql_log.txt', output, timestamp)
 
     conn.close()
     # Use the timestamp variable in the print statement at the end of the function
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # Move the timestamp assignment here
     output = f"[{timestamp}] Database insertion completed."
     print(f"{Fore.GREEN}{output}{Fore.RESET}")
-    save_log_to_file('sql_log.txt', output)
+    save_log_to_file('sql_log.txt', output, timestamp)
 
-def save_log_to_file(log_file, log_content):
+def save_log_to_file(log_file, log_content, timestamp):
     log_folder_path = os.path.join(os.getcwd(), LOG_FOLDER)
     os.makedirs(log_folder_path, exist_ok=True)
 
     log_file_path = os.path.join(log_folder_path, log_file)
+    # Include the timestamp in the log content
+    log_content_with_timestamp = f"[{timestamp}] {log_content}"
     # Strip ANSI escape codes before writing to the log file
-    clean_log_content = re.sub(r'\x1b\[\d+m', '', log_content)
+    clean_log_content = re.sub(r'\x1b\[\d+m', '', log_content_with_timestamp)
     with open(log_file_path, 'a', encoding='utf-8') as f:
         f.write(clean_log_content + '\n')
 
@@ -130,11 +130,11 @@ if __name__ == '__main__':
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     output = f"[{timestamp}] Searching for fields: {fields_to_search}"
     print(f"{Fore.YELLOW}{output}{Fore.RESET}")
-    save_log_to_file('search_log.txt', output)
+    save_log_to_file('search_log.txt', output, timestamp)
 
     search_files_for_fields(fields_to_search, args.directory, args.database)
 
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     output = f"[{timestamp}] Search completed."
     print(f"{Fore.GREEN}{output}{Fore.RESET}")
-    save_log_to_file('search_log.txt', output)
+    save_log_to_file('search_log.txt', output, timestamp)
