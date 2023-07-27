@@ -10,13 +10,18 @@ from tenacity import retry, stop_after_attempt, wait_random_exponential
 # Initialize colorama to support ANSI escape codes on Windows
 init()
 
+LOG_FOLDER = 'logs'
+
 def read_fields_from_file(file_path):
     with open(file_path, 'r') as f:
         return [line.strip() for line in f if line.strip()]
 
 def extract_text_from_binary(file_path):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    print(f"{Fore.CYAN}[Tika - {timestamp}] Processing file: {file_path}{Fore.RESET}")
+    output = f"[Tika - {timestamp}] Processing file: {file_path}"
+    print(f"{Fore.CYAN}{output}{Fore.RESET}")
+    save_log_to_file('tika_log.txt', output)
+
     parsed = tika_parser.from_file(file_path)
     return parsed['content'] if 'content' in parsed else ''
 
@@ -34,7 +39,7 @@ def initialize_database(database_file):
 
     conn.commit()
     conn.close()
-    
+
 @retry(stop=stop_after_attempt(3), wait=wait_random_exponential(multiplier=1, max=10))
 def search_files_for_fields(fields_to_search, directory, database_file):
     if not os.path.exists(database_file):
@@ -85,14 +90,30 @@ def search_files_for_fields(fields_to_search, directory, database_file):
                     c.execute("INSERT INTO search_results VALUES (?, ?, ?, ?, ?, ?)",
                               (unique_id, timestamp, file_path, file_type, ', '.join(matched_fields), '\n'.join(matched_content)))
                     conn.commit()
-                    print(f"{Fore.MAGENTA}[SQL - {timestamp}] Inserted into database: {file_path}{Fore.RESET}")
+                    output = f"[SQL - {timestamp}] Inserted into database: {file_path}"
+                    print(f"{Fore.MAGENTA}{output}{Fore.RESET}")
+                    save_log_to_file('sql_log.txt', output)
                 except Exception as e:
                     conn.rollback()
-                    print(f"{Fore.RED}[SQL - {timestamp}] Error inserting into database: {e}{Fore.RESET}")
+                    output = f"[SQL - {timestamp}] Error inserting into database: {e}"
+                    print(f"{Fore.RED}{output}{Fore.RESET}")
+                    save_log_to_file('sql_log.txt', output)
 
     conn.close()
     # Use the timestamp variable in the print statement at the end of the function
-    print(f"{Fore.GREEN}[{timestamp}] Database insertion completed.{Fore.RESET}")
+    output = f"[{timestamp}] Database insertion completed."
+    print(f"{Fore.GREEN}{output}{Fore.RESET}")
+    save_log_to_file('sql_log.txt', output)
+
+def save_log_to_file(log_file, log_content):
+    log_folder_path = os.path.join(os.getcwd(), LOG_FOLDER)
+    os.makedirs(log_folder_path, exist_ok=True)
+
+    log_file_path = os.path.join(log_folder_path, log_file)
+    # Strip ANSI escape codes before writing to the log file
+    clean_log_content = re.sub(r'\x1b\[\d+m', '', log_content)
+    with open(log_file_path, 'a', encoding='utf-8') as f:
+        f.write(clean_log_content + '\n')
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description='Search for terms in files recursively and save on SQLite database')
@@ -102,7 +123,14 @@ if __name__ == '__main__':
     args = arg_parser.parse_args()
 
     fields_to_search = read_fields_from_file(args.fields_file)
-    print(f"{Fore.YELLOW}[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Searching for fields: {fields_to_search}{Fore.RESET}")
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    output = f"[{timestamp}] Searching for fields: {fields_to_search}"
+    print(f"{Fore.YELLOW}{output}{Fore.RESET}")
+    save_log_to_file('search_log.txt', output)
+
     search_files_for_fields(fields_to_search, args.directory, args.database)
 
-    print(f"{Fore.GREEN}[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Search completed.{Fore.RESET}")
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    output = f"[{timestamp}] Search completed."
+    print(f"{Fore.GREEN}{output}{Fore.RESET}")
+    save_log_to_file('search_log.txt', output)
