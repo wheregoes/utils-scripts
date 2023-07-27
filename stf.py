@@ -14,7 +14,7 @@ LOG_FOLDER = 'logs'
 
 def read_fields_from_file(file_path):
     with open(file_path, 'r') as f:
-        return [line.strip() for line in f if line.strip()]
+        return {line.strip() for line in f if line.strip()}
 
 def extract_text_from_binary(file_path):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -45,6 +45,9 @@ def search_files_for_fields(fields_to_search, directory, database_file):
     if not os.path.exists(database_file):
         initialize_database(database_file)
 
+    pattern = r'\b(?:' + '|'.join(re.escape(term) for term in fields_to_search) + r')\b'
+    search_regex = re.compile(pattern, re.IGNORECASE)
+
     conn = sqlite3.connect(database_file)
     c = conn.cursor()
 
@@ -72,11 +75,12 @@ def search_files_for_fields(fields_to_search, directory, database_file):
             matched_content = []
 
             for line_number, line in enumerate(file_content.splitlines(), start=1):
-                for field in fields_to_search:
-                    if re.search(r'(?i)\b{}\b'.format(re.escape(field)), line):
-                        found_matches = True
-                        matched_fields.add(field)
-                        matched_content.append(line.strip())
+                if search_regex.search(line):  # Use regex search instead of re.search
+                    found_matches = True
+                    matched_line = line.strip()
+                    matched_content.append(matched_line)
+                    # Find all matched terms in the line using the compiled regex
+                    matched_fields.update(term for term in fields_to_search if re.search(r'\b{}\b'.format(re.escape(term)), matched_line, re.IGNORECASE))
 
             if found_matches:
                 # Generate a new unique ID for this input
