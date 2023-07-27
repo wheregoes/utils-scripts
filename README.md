@@ -10,8 +10,7 @@ Search for terms in files recursively and save on SQLite database. <br />
 :heavy_check_mark: Can be used in background. <br />
 
 **Future Updates** <br />
-:heavy_check_mark: Support to regex. <br />
-:heavy_check_mark: Improve the processing speed. <br />
+:heavy_minus_sign: Support to regex. <br />
 ***Suggestions***
 
 Usage:
