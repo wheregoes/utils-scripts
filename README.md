@@ -101,7 +101,19 @@ Separate files by extension <br />
 
 Usage:
 ```
-python3 sfe.py [-h] [-cp] [-mv] [source_directory] [destination_directory]
+usage: sfe.py [-h] [-cp] [-mv] [-r] source_directory [destination_directory]
+
+Separate files in folders by file extension
+
+positional arguments:
+  source_directory      Path to the source directory
+  destination_directory Path to the destination directory
+
+options:
+  -h, --help            Help
+  -cp, --copy-files     Copy files to destination directory
+  -mv, --move-files     Move files to destination directory
+  -r, --recursive       Recursively copy or move files
 ```
 
 # rdf.py
