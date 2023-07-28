@@ -2,36 +2,43 @@ import os
 import shutil
 import argparse
 import logging
-import datetime
 from colorama import init, Fore, Style
 
 init(autoreset=True)
 
 def copy_file(source_path, destination_path):
-    extension = os.path.splitext(destination_path)[1]
     destination_folder = os.path.dirname(destination_path)
-    filename = os.path.basename(destination_path)
+    filename, extension = os.path.splitext(os.path.basename(destination_path))
 
-    # Append timestamp to the filename
-    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    filename_with_timestamp = f"{os.path.splitext(filename)[0]}_{timestamp}{extension}"
-    destination_path_with_timestamp = os.path.join(destination_folder, filename_with_timestamp)
+    # Handle filename conflicts by appending a numeric suffix
+    suffix = 0
+    while True:
+        suffix_str = f"-{suffix:02d}" if suffix > 0 else ""
+        new_filename = f"{filename}{suffix_str}{extension}"
+        new_destination_path = os.path.join(destination_folder, new_filename)
+        if not os.path.exists(new_destination_path):
+            break
+        suffix += 1
 
-    shutil.copy(source_path, destination_path_with_timestamp)
-    return f"{Fore.GREEN}Copied{Style.RESET_ALL}: {source_path} to {destination_path_with_timestamp}"
+    shutil.copy(source_path, new_destination_path)
+    return f"{Fore.GREEN}Copied{Style.RESET_ALL}: {source_path} to {new_destination_path}"
 
 def move_file(source_path, destination_path):
-    extension = os.path.splitext(destination_path)[1]
     destination_folder = os.path.dirname(destination_path)
-    filename = os.path.basename(destination_path)
+    filename, extension = os.path.splitext(os.path.basename(destination_path))
 
-    # Append timestamp to the filename
-    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    filename_with_timestamp = f"{os.path.splitext(filename)[0]}_{timestamp}{extension}"
-    destination_path_with_timestamp = os.path.join(destination_folder, filename_with_timestamp)
+    # Handle filename conflicts by appending a numeric suffix
+    suffix = 0
+    while True:
+        suffix_str = f"-{suffix:02d}" if suffix > 0 else ""
+        new_filename = f"{filename}{suffix_str}{extension}"
+        new_destination_path = os.path.join(destination_folder, new_filename)
+        if not os.path.exists(new_destination_path):
+            break
+        suffix += 1
 
-    shutil.move(source_path, destination_path_with_timestamp)
-    return f"{Fore.CYAN}Moved{Style.RESET_ALL}: {source_path} to {destination_path_with_timestamp}"
+    shutil.move(source_path, new_destination_path)
+    return f"{Fore.CYAN}Moved{Style.RESET_ALL}: {source_path} to {new_destination_path}"
 
 def separate_files_by_extension(source_dir, destination_dir, action, recursive=False):
     os.makedirs(destination_dir, exist_ok=True)
