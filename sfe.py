@@ -2,17 +2,36 @@ import os
 import shutil
 import argparse
 import logging
+import datetime
 from colorama import init, Fore, Style
 
 init(autoreset=True)
 
 def copy_file(source_path, destination_path):
-    shutil.copy(source_path, destination_path)
-    return f"{Fore.GREEN}Copied{Style.RESET_ALL}: {source_path} to {destination_path}"
+    extension = os.path.splitext(destination_path)[1]
+    destination_folder = os.path.dirname(destination_path)
+    filename = os.path.basename(destination_path)
+
+    # Append timestamp to the filename
+    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    filename_with_timestamp = f"{os.path.splitext(filename)[0]}_{timestamp}{extension}"
+    destination_path_with_timestamp = os.path.join(destination_folder, filename_with_timestamp)
+
+    shutil.copy(source_path, destination_path_with_timestamp)
+    return f"{Fore.GREEN}Copied{Style.RESET_ALL}: {source_path} to {destination_path_with_timestamp}"
 
 def move_file(source_path, destination_path):
-    shutil.move(source_path, destination_path)
-    return f"{Fore.CYAN}Moved{Style.RESET_ALL}: {source_path} to {destination_path}"
+    extension = os.path.splitext(destination_path)[1]
+    destination_folder = os.path.dirname(destination_path)
+    filename = os.path.basename(destination_path)
+
+    # Append timestamp to the filename
+    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    filename_with_timestamp = f"{os.path.splitext(filename)[0]}_{timestamp}{extension}"
+    destination_path_with_timestamp = os.path.join(destination_folder, filename_with_timestamp)
+
+    shutil.move(source_path, destination_path_with_timestamp)
+    return f"{Fore.CYAN}Moved{Style.RESET_ALL}: {source_path} to {destination_path_with_timestamp}"
 
 def separate_files_by_extension(source_dir, destination_dir, action, recursive=False):
     os.makedirs(destination_dir, exist_ok=True)
