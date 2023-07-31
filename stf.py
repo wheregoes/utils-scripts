@@ -12,17 +12,24 @@ init()
 
 LOG_FOLDER = 'logs'
 
+# Increase the timeout value (in seconds) to accommodate larger files
+TIKA_TIMEOUT = 120  # Adjust this value as needed
+
 def read_fields_from_file(file_path):
     with open(file_path, 'r') as f:
         return {line.strip() for line in f if line.strip()}
 
-def extract_text_from_binary(file_path, timestamp):  # Pass timestamp as an argument
+def extract_text_from_binary(file_path, timestamp):
     output = f"[Tika - {timestamp}] Processing file: {file_path}"
     print(f"{Fore.CYAN}{output}{Fore.RESET}")
     save_log_to_file('tika_log.txt', output, timestamp)
 
-    parsed = tika_parser.from_file(file_path)
-    return parsed['content'] if 'content' in parsed else ''
+    try:
+        parsed = tika_parser.from_file(file_path, requestOptions={'timeout': TIKA_TIMEOUT})
+        return parsed['content'] if 'content' in parsed else ''
+    except Exception as e:
+        print(f"{Fore.RED}Error processing file: {e}{Fore.RESET}")
+        return ''
 
 def clean_string(s):
     # Replace unsupported characters with an empty string
@@ -101,8 +108,7 @@ def search_files_for_fields(fields_to_search, directory, database_file):
                     save_log_to_file('sql_log.txt', output, timestamp)
 
     conn.close()
-    # Use the timestamp variable in the print statement at the end of the function
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # Move the timestamp assignment here
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     output = f"[{timestamp}] Database insertion completed."
     print(f"{Fore.GREEN}{output}{Fore.RESET}")
     save_log_to_file('sql_log.txt', output, timestamp)
@@ -112,9 +118,7 @@ def save_log_to_file(log_file, log_content, timestamp):
     os.makedirs(log_folder_path, exist_ok=True)
 
     log_file_path = os.path.join(log_folder_path, log_file)
-    # Include the timestamp in the log content
     log_content_with_timestamp = f"[{timestamp}] {log_content}"
-    # Strip ANSI escape codes before writing to the log file
     clean_log_content = re.sub(r'\x1b\[\d+m', '', log_content_with_timestamp)
     with open(log_file_path, 'a', encoding='utf-8') as f:
         f.write(clean_log_content + '\n')
