@@ -15,14 +15,14 @@ Search for terms in files recursively and save on SQLite database. <br />
 
 Usage:
 ```
-usage: stf.py [-h] [terms_file] [directory] [database]
+usage: python3 stf.py terms_file directory [database]
 
 Search for terms in files recursively and save on SQLite database
 
 positional arguments:
   terms_file   Path to the file containing terms.
   directory    The directory to search recursively.
-  database     SQLite database file to store the results.
+  database     SQLite database file to store the results. (default=results-db.sqlite)
 
 options:
   -h, --help   Help
@@ -72,7 +72,9 @@ Move/Copy multiple files. <br />
 
 Usage:
 ```
-python3 mmf.py [--regex] (-mv | -cp) [source_paths_file] [destination_folder]
+python3 mmf.py [--regex] [-cp] [-mv] [-nd] source_paths_file destination_folder
+
+Move/Copy Multiple Files and Folders
 
 positional arguments:
   source_paths_file   Path to the source_paths.txt file or enter paths one by one.
@@ -80,9 +82,10 @@ positional arguments:
 
 options:
   -h, --help          Help
-  --regex             Use regex to match files in the source directory.
-  -mv, --move-files   Move files to the destination folder.
-  -cp, --copy-files   Copy files to the destination folder.
+  --regex             Use regex to match files and folders in the source directory.
+  -mv, --move-files   Move files/folders to the destination folder.
+  -cp, --copy-files   Copy files/folders to the destination folder.
+  -nd, --no-dir       Do not move/copy folders to the destination folder.
 ```
 
 # sfe.py
@@ -101,7 +104,7 @@ Separate files by extension <br />
 
 Usage:
 ```
-usage: sfe.py [-h] [-cp] [-mv] [-r] source_directory [destination_directory]
+usage: python3 sfe.py [-cp] [-mv] [-r] source_directory destination_directory
 
 Separate files in folders by file extension
 
@@ -121,13 +124,26 @@ options:
 Search recursively for duplicate files by calculating hash of every file and delete. <br />
 
 **Requirements:**
-```pip install tqdm```
+```pip install tqdm sql```
 
 **Features** <br />
-:heavy_check_mark: Remove files recursively (user input the directory or where the script is). <br />
+:heavy_check_mark: Remove files recursively. <br />
 :heavy_check_mark: Can handle large files. <br />
 :heavy_check_mark: Log when can't remove a file.  <br />
 :heavy_check_mark: Can be used in background. <br />
 
 **Future Updates** <br />
 ***Suggestions***
+
+Usage:
+```
+python3 rdf.py start_path
+
+Process files and store their hashes in a SQLite database.
+
+positional arguments:
+  start_path  Starting path for file search
+
+options:
+  -h, --help  Help
+```
