@@ -1,8 +1,8 @@
-[DMF - Download multiple files from a file or user input and save on folder.](#-dmf.py) <br />
-[MMF- Move/Copy multiple files.](#-mmf.py) <br />
-[SFE - Separate files by extension](#-sfe.py) <br />
-[HAM - ~Random~HashAccessMemories](#-ham.py) <br />
-[RDF - Search recursively for duplicate files by calculating hash of every file and delete.](#-rdf.py) <br />
+[DMF - Download multiple files from a file or user input and save on folder.](#dmf.py) <br />
+[MMF- Move/Copy multiple files.](#mmf.py) <br />
+[SFE - Separate files by extension](#sfe.py) <br />
+[HAM - ~Random~HashAccessMemories](#ham.py) <br />
+[RDF - Search recursively for duplicate files by calculating hash of every file and delete.](#rdf.py) <br />
 
 # dmf.py
 **Description** <br />
