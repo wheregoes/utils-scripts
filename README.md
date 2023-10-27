@@ -1,3 +1,9 @@
+[DMF - Download multiple files from a file or user input and save on folder.](#-dmf.py) <br />
+[MMF- Move/Copy multiple files.](#-mmf.py) <br />
+[SFE - Separate files by extension](#-sfe.py) <br />
+[HAM - ~Random~HashAccessMemories](#-ham.py) <br />
+[RDF - Search recursively for duplicate files by calculating hash of every file and delete.](#-rdf.py) <br />
+
 # dmf.py
 **Description** <br />
 Download multiple files from a file or user input and save on folder. <br />
@@ -88,6 +94,57 @@ options:
   -mv, --move-files     Move files to destination directory
   -r, --recursive       Recursively copy or move files
 ```
+
+
+# ham.py
+**Description** <br />
+~Random~HashAccessMemories <br />
+
+A script that provides a simple way to merge the cracked passwords to they respective usernames. <br />
+
+Example:
+```
+cat any_leak_user_hash.txt
+user01:16e029226d8960b2d7cba16cab5f7044
+user02:a280638195f9e88fb2fbdfcd1283d7fa
+email@gmail.com:fee22a6247e95d5a08769c51a861cb00
+
+cat any_leak_dehashed_pass.txt
+16e029226d8960b2d7cba16cab5f7044:n00b
+a280638195f9e88fb2fbdfcd1283d7fa:daftpunk
+fee22a6247e95d5a08769c51a861cb00:checkstfproject
+
+```
+The script will merge these two files, changing the hashes that has been dehashed.
+
+The third file result will be:
+``` 
+cat any_leak_user:pass.txt
+user01:n00b
+user02:daftpunk
+email@gmail.com:checkstfproject
+
+```
+
+**Requirements:**
+```pip install tqdm```
+
+**Future Updates** <br />
+***Suggestions*** <br />
+
+Usage:
+```
+usage: ham.py input_file dehashed_file [-o OUTPUT_FILE]
+
+positional arguments:
+  input_file            The file containing the usernames and hashes.
+  dehashed_file         The file containing the hashes and cracked passwords.
+
+options:
+  -o OUTPUT_FILE, --output_file OUTPUT_FILE
+                        Output file with matched usernames and passwords.
+```
+
 
 # rdf.py
 **Description** <br />
