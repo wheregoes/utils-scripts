@@ -1,0 +1,10 @@
+text/plain,.txt
+application/javascript,.js
+application/octet-stream,.bin
+text/csv,.csv
+application/vnd.ms-excel,.xls
+text/xml,.xml
+application/zip,.zip
+application/vnd.ms-outlook,.msg
+application/pdf,.pdf
+text/html,.html
